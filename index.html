@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contadoris · Plataforma Contábil Whitelabel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep:   #3F2A8E;
+    --mid:    #6047C7;
+    --light:  #9B8AE0;
+    --spark:  #B8A0E8;
+    --ink:    #1F1B2C;
+    --mute:   #888793;
+    --bone:   #F2EFE9;
+    --paper:  #FAFAF7;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter Tight', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── LOGO SVG ── */
+  .logo-svg { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-svg svg { width: 32px; height: 32px; }
+  .logo-text {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+  }
+  .logo-text strong { font-weight: 700; color: var(--deep); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(250,250,247,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(63,42,142,0.08);
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 24px rgba(63,42,142,0.08); }
+  .nav-links {
+    display: flex; align-items: center; gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    text-decoration: none; color: var(--mute);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--mid); }
+  .nav-cta {
+    background: var(--deep); color: #fff;
+    padding: 10px 24px; border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; text-decoration: none;
+    transition: background .2s, transform .15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--mid); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 70% at 80% 20%, rgba(184,160,232,0.18) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 50% at 10% 80%, rgba(96,71,199,0.08) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(63,42,142,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(63,42,142,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--mid);
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-bottom: 32px;
+    opacity: 0; animation: fadeUp .6s .1s ease forwards;
+  }
+  .hero-tag::before {
+    content: ''; width: 24px; height: 2px; background: var(--mid);
+  }
+  .hero h1 {
+    font-size: clamp(52px, 6vw, 92px);
+    font-weight: 300; line-height: 1.04;
+    letter-spacing: -2px; color: var(--ink);
+    max-width: 800px;
+    opacity: 0; animation: fadeUp .7s .2s ease forwards;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--deep); font-weight: 700;
+  }
+  .hero-sub {
+    font-size: 18px; font-weight: 400; line-height: 1.6;
+    color: var(--mute); max-width: 520px;
+    margin-top: 28px;
+    opacity: 0; animation: fadeUp .7s .35s ease forwards;
+  }
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px;
+    margin-top: 48px;
+    opacity: 0; animation: fadeUp .7s .5s ease forwards;
+  }
+  .btn-primary {
+    background: var(--deep); color: #fff;
+    padding: 16px 36px; border-radius: 8px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 15px; font-weight: 600;
+    text-decoration: none;
+    transition: background .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(63,42,142,0.25);
+  }
+  .btn-primary:hover { background: var(--mid); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(63,42,142,0.3); }
+  .btn-ghost {
+    color: var(--mid);
+    padding: 16px 24px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 15px; font-weight: 500;
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    transition: color .2s;
+  }
+  .btn-ghost:hover { color: var(--deep); }
+  .btn-ghost svg { transition: transform .2s; }
+  .btn-ghost:hover svg { transform: translateX(4px); }
+
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 72px;
+    opacity: 0; animation: fadeUp .7s .65s ease forwards;
+  }
+  .stat-item { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-size: 32px; font-weight: 700; color: var(--deep);
+    font-variant-numeric: tabular-nums; letter-spacing: -1px;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--mute); text-transform: uppercase; letter-spacing: .1em;
+  }
+  .hero-visual {
+    position: absolute; right: 48px; top: 50%;
+    transform: translateY(-50%);
+    width: min(480px, 40vw);
+    opacity: 0; animation: fadeLeft .9s .4s ease forwards;
+  }
+
+  /* ── DASHBOARD MOCKUP ── */
+  .dash-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 80px rgba(31,27,44,0.14), 0 4px 16px rgba(63,42,142,0.08);
+    overflow: hidden;
+    border: 1px solid rgba(63,42,142,0.08);
+  }
+  .dash-header {
+    background: var(--deep); padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .dash-logo-text {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 300; font-size: 13px; color: #fff; letter-spacing: -0.3px;
+  }
+  .dash-logo-text strong { font-weight: 700; color: var(--spark); }
+  .dash-nav-items { display: flex; gap: 16px; margin-left: auto; }
+  .dash-nav-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: .08em; text-transform: uppercase;
+  }
+  .dash-nav-item.active { color: #fff; }
+  .dash-body { padding: 20px; background: var(--bone); }
+  .dash-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--mute); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .dash-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .metric-card {
+    background: #fff; border-radius: 8px; padding: 14px;
+    border: 1px solid rgba(63,42,142,0.06);
+  }
+  .metric-card.accent { background: var(--deep); }
+  .metric-value {
+    font-size: 22px; font-weight: 700; color: var(--deep);
+    letter-spacing: -1px; font-variant-numeric: tabular-nums;
+  }
+  .metric-card.accent .metric-value { color: #fff; }
+  .metric-change {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: #4CAF7A; margin-top: 2px;
+  }
+  .metric-card.accent .metric-change { color: var(--spark); }
+  .metric-label2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--mute); margin-top: 6px; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .metric-card.accent .metric-label2 { color: rgba(255,255,255,0.5); }
+  .dash-list { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid rgba(63,42,142,0.06); }
+  .dash-list-header {
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--mute); letter-spacing: .08em; text-transform: uppercase;
+    border-bottom: 1px solid var(--bone);
+  }
+  .dash-list-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--bone);
+    font-size: 11px;
+  }
+  .dash-list-item:last-child { border-bottom: none; }
+  .item-name { font-weight: 500; color: var(--ink); font-size: 11px; }
+  .item-days {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    background: rgba(255,80,80,0.1); color: #e53e3e;
+    padding: 2px 8px; border-radius: 100px;
+  }
+  .item-value { font-weight: 600; color: var(--deep); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .dash-bar-section { margin-top: 10px; background: #fff; border-radius: 8px; padding: 14px; border: 1px solid rgba(63,42,142,0.06); }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-name { font-size: 10px; color: var(--mute); min-width: 80px; }
+  .bar-track { flex: 1; height: 6px; background: var(--bone); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; background: var(--mid); }
+  .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--deep); min-width: 40px; text-align: right; }
+
+  /* ── SECTIONS SHARED ── */
+  section { padding: 100px 48px; }
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--mid);
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-bottom: 20px;
+  }
+  .section-tag::before { content: ''; width: 16px; height: 2px; background: var(--mid); }
+  h2 {
+    font-size: clamp(36px, 4vw, 60px);
+    font-weight: 300; letter-spacing: -1.5px; line-height: 1.06;
+    color: var(--ink); max-width: 640px;
+  }
+  h2 strong { font-weight: 700; color: var(--deep); }
+
+  /* ── HOW IT WORKS ── */
+  .how { background: var(--bone); }
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 64px;
+  }
+  .how-step {
+    background: var(--paper); padding: 40px 36px;
+    position: relative; overflow: hidden;
+    transition: background .2s;
+  }
+  .how-step:first-child { border-radius: 12px 0 0 12px; }
+  .how-step:last-child { border-radius: 0 12px 12px 0; }
+  .how-step:hover { background: #fff; }
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--light); letter-spacing: .1em;
+    margin-bottom: 24px;
+  }
+  .step-icon {
+    width: 48px; height: 48px; margin-bottom: 20px;
+    background: var(--deep); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-icon svg { width: 24px; height: 24px; }
+  .step-title { font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 12px; }
+  .step-desc { font-size: 15px; font-weight: 400; line-height: 1.65; color: var(--mute); }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 32px; margin-top: 64px;
+  }
+  .feature-card {
+    background: var(--bone); border-radius: 12px; padding: 36px;
+    border: 1px solid transparent;
+    transition: border-color .2s, transform .2s, box-shadow .2s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--deep), var(--light));
+    opacity: 0; transition: opacity .2s;
+  }
+  .feature-card:hover { border-color: rgba(96,71,199,0.2); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(63,42,142,0.1); }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-card.large { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .feature-icon {
+    width: 44px; height: 44px; margin-bottom: 20px;
+    background: rgba(63,42,142,0.08); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .feature-icon svg { width: 22px; height: 22px; }
+  .feature-title { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+  .feature-desc { font-size: 14px; line-height: 1.65; color: var(--mute); }
+  .feature-list { list-style: none; margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 14px; color: var(--mute); line-height: 1.5;
+  }
+  .feature-list li::before { content: '→'; color: var(--mid); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── WHITELABEL ── */
+  .whitelabel { background: var(--deep); color: #fff; }
+  .whitelabel h2 { color: #fff; max-width: 560px; }
+  .whitelabel h2 strong { color: var(--spark); }
+  .wl-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; margin-top: 64px; align-items: center;
+  }
+  .wl-desc { font-size: 17px; font-weight: 400; line-height: 1.7; color: rgba(255,255,255,0.7); margin-top: 20px; }
+  .wl-items { display: flex; flex-direction: column; gap: 16px; margin-top: 36px; }
+  .wl-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: rgba(255,255,255,0.06); border-radius: 10px; padding: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background .2s;
+  }
+  .wl-item:hover { background: rgba(255,255,255,0.1); }
+  .wl-item-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(184,160,232,0.2); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wl-item-icon svg { width: 18px; height: 18px; }
+  .wl-item-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .wl-item-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .wl-preview {
+    background: rgba(255,255,255,0.06); border-radius: 16px; padding: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .wl-preview-bar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  }
+  .wl-preview-dots { display: flex; gap: 5px; }
+  .wl-preview-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .wl-preview-url {
+    flex: 1; background: rgba(255,255,255,0.08); border-radius: 4px; padding: 5px 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: .05em;
+  }
+  .wl-screen { background: var(--bone); border-radius: 8px; overflow: hidden; }
+  .wl-screen-header { background: #4a90d9; padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .wl-screen-logo { font-family: 'Inter Tight', sans-serif; font-size: 12px; font-weight: 700; color: #fff; }
+  .wl-screen-body { padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .wl-mini-card { background: #fff; border-radius: 6px; padding: 10px; }
+  .wl-mini-val { font-size: 16px; font-weight: 700; color: #4a90d9; letter-spacing: -0.5px; }
+  .wl-mini-label { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--mute); margin-top: 4px; text-transform: uppercase; letter-spacing: .06em; }
+  .wl-caption {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.35);
+    text-align: center; margin-top: 12px; letter-spacing: .06em; text-transform: uppercase;
+  }
+
+  /* ── ROLES ── */
+  .roles { background: var(--paper); }
+  .roles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 64px; }
+  .role-card {
+    background: var(--bone); padding: 36px 28px;
+    transition: background .2s, transform .2s;
+    cursor: default;
+  }
+  .role-card:first-child { border-radius: 12px 0 0 12px; }
+  .role-card:last-child { border-radius: 0 12px 12px 0; }
+  .role-card:hover { background: var(--deep); transform: translateY(-4px); }
+  .role-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(63,42,142,0.1);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; transition: background .2s;
+  }
+  .role-icon svg { width: 20px; height: 20px; }
+  .role-card:hover .role-icon { background: rgba(255,255,255,0.15); }
+  .role-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--mid); margin-bottom: 12px;
+    transition: color .2s;
+  }
+  .role-card:hover .role-badge { color: var(--spark); }
+  .role-name { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 12px; transition: color .2s; }
+  .role-card:hover .role-name { color: #fff; }
+  .role-desc { font-size: 13px; line-height: 1.65; color: var(--mute); transition: color .2s; }
+  .role-card:hover .role-desc { color: rgba(255,255,255,0.65); }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--bone); text-align: center;
+    padding: 120px 48px;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(184,160,232,0.15) 0%, transparent 70%);
+  }
+  .cta-section h2 { margin: 0 auto; text-align: center; }
+  .cta-sub { font-size: 17px; color: var(--mute); margin: 20px auto 0; max-width: 480px; line-height: 1.65; }
+  .cta-actions { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 48px; }
+  .cta-note {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--mute); margin-top: 20px; letter-spacing: .06em; text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.5);
+    padding: 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer-logo-text {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 300; font-size: 16px; color: rgba(255,255,255,0.8); letter-spacing: -0.3px;
+  }
+  .footer-logo-text strong { font-weight: 700; color: var(--spark); }
+  .footer-copy {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translate(32px, -50%); }
+    to { opacity: 1; transform: translate(0, -50%); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    .hero-visual { display: none; }
+    .wl-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .feature-card.large { grid-column: span 1; grid-template-columns: 1fr; }
+    .roles-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .role-card:first-child { border-radius: 12px 0 0 0; }
+    .role-card:last-child { border-radius: 0 0 12px 0; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 64px 24px; }
+    .hero { padding: 100px 24px 64px; }
+    .hero h1 { letter-spacing: -1px; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    .how-grid { grid-template-columns: 1fr; gap: 2px; }
+    .how-step:first-child { border-radius: 12px 12px 0 0; }
+    .how-step:last-child { border-radius: 0 0 12px 12px; }
+    .roles-grid { grid-template-columns: 1fr; gap: 2px; }
+    .role-card:first-child { border-radius: 12px 12px 0 0; }
+    .role-card:last-child { border-radius: 0 0 12px 12px; }
+    footer { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="logo-svg" href="#">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="15" width="8" height="17" rx="2" fill="#9B8AE0"/>
+      <rect x="14" y="9" width="8" height="23" rx="2" fill="#6047C7"/>
+      <rect x="24" y="2" width="8" height="30" rx="2" fill="#3F2A8E"/>
+      <circle cx="33" cy="3" r="4" fill="#B8A0E8"/>
+    </svg>
+    <span class="logo-text">contador<strong>is</strong></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#funcionalidades">Funcionalidades</a></li>
+    <li><a href="#whitelabel">Whitelabel</a></li>
+    <li><a href="#perfis">Perfis</a></li>
+  </ul>
+  <a href="#contato" class="nav-cta">Começar agora</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-tag">Plataforma contábil whitelabel</div>
+  <h1>A organização que<br><em>o seu escritório</em><br>precisa.</h1>
+  <p class="hero-sub">Gerencie honorários, clientes e processos contábeis em uma plataforma que leva a sua marca — não a nossa.</p>
+  <div class="hero-actions">
+    <a href="#contato" class="btn-primary">Agendar demonstração</a>
+    <a href="#como-funciona" class="btn-ghost">
+      Ver como funciona
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#6047C7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Whitelabel</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">4</span>
+      <span class="stat-label">Níveis de acesso</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">0</span>
+      <span class="stat-label">Setup técnico</span>
+    </div>
+  </div>
+
+  <!-- Dashboard mockup -->
+  <div class="hero-visual">
+    <div class="dash-card">
+      <div class="dash-header">
+        <svg width="20" height="20" viewBox="0 0 36 36" fill="none">
+          <rect x="2" y="14" width="7" height="18" rx="1.5" fill="#9B8AE0"/>
+          <rect x="11" y="8" width="7" height="24" rx="1.5" fill="#6047C7"/>
+          <rect x="20" y="2" width="7" height="30" rx="1.5" fill="#fff" opacity=".9"/>
+          <circle cx="29" cy="3" r="3.5" fill="#B8A0E8"/>
+        </svg>
+        <span class="dash-logo-text">contador<strong>is</strong></span>
+        <div class="dash-nav-items">
+          <span class="dash-nav-item active">Painel</span>
+          <span class="dash-nav-item">Clientes</span>
+          <span class="dash-nav-item">Inadimplência</span>
+        </div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-section-label">Visão geral · Maio 2026</div>
+        <div class="dash-metrics">
+          <div class="metric-card accent">
+            <div class="metric-value">R$482.190</div>
+            <div class="metric-change">↑ 12,4% vs abril</div>
+            <div class="metric-label2">Honorários ativos</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">R$31.680</div>
+            <div class="metric-change" style="color:#e53e3e">↑ 3 em atraso</div>
+            <div class="metric-label2">Inadimplência</div>
+          </div>
+        </div>
+        <div class="dash-list">
+          <div class="dash-list-header">Clientes em atraso</div>
+          <div class="dash-list-item">
+            <span class="item-name">Metalúrgica São Paulo</span>
+            <span class="item-days">45 dias</span>
+            <span class="item-value">R$8.400</span>
+          </div>
+          <div class="dash-list-item">
+            <span class="item-name">Distribuidora Norte</span>
+            <span class="item-days">32 dias</span>
+            <span class="item-value">R$5.200</span>
+          </div>
+          <div class="dash-list-item">
+            <span class="item-name">Construções JB Ltda</span>
+            <span class="item-days">31 dias</span>
+            <span class="item-value">R$18.080</span>
+          </div>
+        </div>
+        <div class="dash-bar-section">
+          <div class="dash-section-label" style="margin-bottom:10px">Honorários por contador</div>
+          <div class="bar-row">
+            <span class="bar-name">Ana Souza</span>
+            <div class="bar-track"><div class="bar-fill" style="width:82%;background:var(--deep)"></div></div>
+            <span class="bar-val">82%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">Carlos Lima</span>
+            <div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--mid)"></div></div>
+            <span class="bar-val">64%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">Beatriz Melo</span>
+            <div class="bar-track"><div class="bar-fill" style="width:51%;background:var(--light)"></div></div>
+            <span class="bar-val">51%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="how" id="como-funciona">
+  <div class="section-tag">Como funciona</div>
+  <h2>Três passos para<br><strong>começar.</strong></h2>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="step-num">01 ·</div>
+      <div class="step-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
+          <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/>
+        </svg>
+      </div>
+      <div class="step-title">Cadastre seu escritório</div>
+      <div class="step-desc">Configure sua contabilidade na plataforma, defina sua identidade visual — logo, cores e nome — e ative sua assinatura.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">02 ·</div>
+      <div class="step-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <path d="M21 21v-2a4 4 0 0 0-3-3.87"/>
+        </svg>
+      </div>
+      <div class="step-title">Adicione contadores e clientes</div>
+      <div class="step-desc">Crie perfis de contadores, vincule empresas e defina quem é responsável por cada cliente — com controle granular de acesso.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">03 ·</div>
+      <div class="step-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
+          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="step-title">Gerencie honorários</div>
+      <div class="step-desc">Crie planos de assinatura para seus clientes, acompanhe inadimplência em tempo real e mantenha o controle financeiro do escritório.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCIONALIDADES -->
+<section id="funcionalidades">
+  <div class="section-tag">Funcionalidades</div>
+  <h2>Tudo que seu escritório<br><strong>precisa controlar.</strong></h2>
+  <div class="features-grid">
+    <div class="feature-card large">
+      <div>
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div class="feature-title">Controle de honorários e inadimplência</div>
+        <div class="feature-desc">Visão centralizada de todos os honorários ativos, vencidos e em atraso. Seu cliente vê o que deve; você vê o todo.</div>
+        <ul class="feature-list">
+          <li>Dashboard com inadimplência por cliente e contador</li>
+          <li>Histórico de pagamentos e assinaturas por empresa</li>
+          <li>Integração com gateway Asaas para cobranças automáticas</li>
+          <li>Alertas de contratos prestes a vencer</li>
+        </ul>
+      </div>
+      <div style="background: var(--bone); border-radius:12px; padding:28px;">
+        <div class="dash-section-label">Inadimplência ativa</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:14px;border:1px solid rgba(63,42,142,0.06)">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--ink)">3 clientes acima de 30 dias</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mute);margin-top:3px">Atualizado agora</div>
+            </div>
+            <div style="font-size:20px;font-weight:700;color:#e53e3e;letter-spacing:-0.5px">R$31.680</div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:14px;border:1px solid rgba(63,42,142,0.06)">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--ink)">12 vencendo em 7 dias</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mute);margin-top:3px">Honorários de junho</div>
+            </div>
+            <div style="font-size:20px;font-weight:700;color:var(--deep);letter-spacing:-0.5px">R$148.200</div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:var(--deep);border-radius:8px;padding:14px;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#fff">Total em dia</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px">87 empresas ativas</div>
+            </div>
+            <div style="font-size:20px;font-weight:700;color:var(--spark);letter-spacing:-0.5px">R$482.190</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="feature-title">Portal do cliente</div>
+      <div class="feature-desc">Seu cliente acessa uma plataforma com a sua marca para ver honorários, status de pagamentos e acompanhar processos contábeis.</div>
+      <ul class="feature-list">
+        <li>Acesso seguro por empresa ou por pessoa física</li>
+        <li>Histórico completo de cobranças e pagamentos</li>
+        <li>Acompanhamento de processos em andamento</li>
+      </ul>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="feature-title">Gestão de contadores</div>
+      <div class="feature-desc">Vincule contadores às empresas que eles atendem. Apenas o responsável (e admins) pode agir sobre uma empresa com contador atribuído.</div>
+      <ul class="feature-list">
+        <li>Atribuição de empresas por contador</li>
+        <li>Controle de acesso por responsabilidade</li>
+        <li>Visão de carteira por contador</li>
+      </ul>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/>
+        </svg>
+      </div>
+      <div class="feature-title">Assinaturas flexíveis</div>
+      <div class="feature-desc">Crie planos personalizados por contabilidade. Defina preços, ciclos e condições — e ofereça isso diretamente aos seus clientes PJ.</div>
+      <ul class="feature-list">
+        <li>Planos mensais, anuais ou customizados</li>
+        <li>Cobrança automática via Asaas</li>
+        <li>Gestão de upgrades, downgrades e cancelamentos</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WHITELABEL -->
+<section class="whitelabel" id="whitelabel">
+  <div class="section-tag" style="color:var(--spark)">
+    <span style="background:var(--spark);display:inline-block;width:16px;height:2px;"></span>
+    Whitelabel
+  </div>
+  <h2>A plataforma com<br><strong>a sua marca.</strong></h2>
+  <div class="wl-grid">
+    <div>
+      <p class="wl-desc">Seu cliente vê o nome do seu escritório, suas cores, seu logo. A Contadoris fica nos bastidores — você fica na frente.</p>
+      <div class="wl-items">
+        <div class="wl-item">
+          <div class="wl-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8A0E8" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="wl-item-title">Domínio próprio</div>
+            <div class="wl-item-desc">Seus clientes acessam via seuescritorio.com.br — sem rastro da Contadoris.</div>
+          </div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8A0E8" stroke-width="1.8" stroke-linecap="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="wl-item-title">Identidade visual completa</div>
+            <div class="wl-item-desc">Logo, cores, nome e tipografia configuráveis por contabilidade.</div>
+          </div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8A0E8" stroke-width="1.8" stroke-linecap="round">
+              <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+          </div>
+          <div>
+            <div class="wl-item-title">Multi-contabilidade</div>
+            <div class="wl-item-desc">Gerencie múltiplos escritórios num único painel, cada um com sua identidade.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="wl-preview">
+        <div class="wl-preview-bar">
+          <div class="wl-preview-dots">
+            <div class="wl-preview-dot"></div>
+            <div class="wl-preview-dot"></div>
+            <div class="wl-preview-dot"></div>
+          </div>
+          <div class="wl-preview-url">app.escritoriofiscal.com.br</div>
+        </div>
+        <div class="wl-screen">
+          <div class="wl-screen-header">
+            <div class="wl-screen-logo">Escritório Fiscal Silva</div>
+          </div>
+          <div class="wl-screen-body">
+            <div class="wl-mini-card">
+              <div class="wl-mini-val">R$8.400</div>
+              <div class="wl-mini-label">Em aberto</div>
+            </div>
+            <div class="wl-mini-card">
+              <div class="wl-mini-val" style="color:#4CAF7A">R$42.100</div>
+              <div class="wl-mini-label">Pago / mês</div>
+            </div>
+            <div class="wl-mini-card" style="grid-column:span 2">
+              <div style="font-size:11px;font-weight:600;color:#1F1B2C;margin-bottom:6px">Próximo vencimento</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mute)">Honorários · Jun/2026</div>
+                <div style="font-size:13px;font-weight:700;color:#4a90d9">R$3.800</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="wl-caption">Powered by Contadoris — invisível para o cliente</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERFIS DE ACESSO -->
+<section class="roles" id="perfis">
+  <div class="section-tag">Perfis de acesso</div>
+  <h2>Cada um vê<br><strong>o que precisa.</strong></h2>
+  <div class="roles-grid">
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="role-badge">Administrador</div>
+      <div class="role-name">SaaS Admin</div>
+      <div class="role-desc">Acesso total ao sistema. Gerencia todas as contabilidades, usuários, assinaturas e configurações gerais da plataforma.</div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div class="role-badge">Contabilidade Admin</div>
+      <div class="role-name">Gestor do escritório</div>
+      <div class="role-desc">Gerencia tudo dentro do(s) escritório(s) que administra: contadores, clientes, empresas, assinaturas e configurações de marca.</div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+      </div>
+      <div class="role-badge">Contador</div>
+      <div class="role-name">Responsável técnico</div>
+      <div class="role-desc">Realiza processos contábeis nas empresas sob sua responsabilidade. Se uma empresa não tem contador vinculado, qualquer contador do escritório pode atendê-la.</div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F2A8E" stroke-width="1.8" stroke-linecap="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div class="role-badge">Cliente</div>
+      <div class="role-name">Empresa cliente</div>
+      <div class="role-desc">Acessa seu portal personalizado, vê honorários, acompanha processos e gerencia sua assinatura — tudo com a marca do escritório.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contato">
+  <div class="section-tag" style="justify-content:center">Começar agora</div>
+  <h2>Importe seu plano de<br><strong>contas em 4 passos.</strong></h2>
+  <p class="cta-sub">Sem migração complicada. Seu escritório operando na plataforma em menos de um dia.</p>
+  <div class="cta-actions">
+    <a href="mailto:contato@contadoris.com.br" class="btn-primary">Agendar demonstração</a>
+    <a href="#como-funciona" class="btn-ghost" style="color:var(--mid)">
+      Saber mais
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#6047C7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <p class="cta-note">Plataforma whitelabel · Integração Asaas · Dados no Brasil</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo-text">contador<strong>is</strong></span>
+  <span class="footer-copy">© 2026 · Plataforma Contábil Whitelabel · V1.0</span>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Intersection observer for section animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.how-step, .feature-card, .role-card, .wl-item').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity .5s ${i * 0.08}s ease, transform .5s ${i * 0.08}s ease`;
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
