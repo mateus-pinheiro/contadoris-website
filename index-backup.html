@@ -30,20 +30,6 @@
     overflow-x: hidden;
   }
 
-  .container {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-
-  @media (min-width: 1600px) {
-    .container { padding: 0 80px; }
-  }
-  @media (min-width: 1920px) {
-    .container { padding: 0 120px; }
-  }
-
   /* ── LOGO SVG ── */
   .logo-svg { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .logo-svg svg { width: 32px; height: 32px; }
@@ -60,7 +46,7 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px clamp(48px, 8vw, 180px);
+    padding: 18px 48px;
     background: rgba(250,250,247,0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(63,42,142,0.08);
@@ -94,7 +80,7 @@
   .hero {
     min-height: 100vh;
     display: flex; flex-direction: column; justify-content: center;
-    padding: 120px clamp(48px, 8vw, 180px) 80px;
+    padding: 120px 48px 80px;
     position: relative; overflow: hidden;
   }
   .hero-bg {
@@ -112,7 +98,7 @@
   }
   .hero-tag {
     font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(11px, 1vw, 14px); font-weight: 500; letter-spacing: 0.12em;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--mid);
     display: inline-flex; align-items: center; gap: 8px;
     margin-bottom: 32px;
@@ -178,7 +164,7 @@
     font-size: 10px; color: var(--mute); text-transform: uppercase; letter-spacing: .1em;
   }
   .hero-visual {
-    position: absolute; right: clamp(48px, 8vw, 180px); top: 50%;
+    position: absolute; right: 48px; top: 50%;
     transform: translateY(-50%);
     width: min(480px, 40vw);
     opacity: 0; animation: fadeLeft .9s .4s ease forwards;
@@ -263,7 +249,7 @@
   .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--deep); min-width: 40px; text-align: right; }
 
   /* ── SECTIONS SHARED ── */
-  section { padding: 100px clamp(48px, 8vw, 180px); }
+  section { padding: 100px 48px; }
   .section-tag {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
@@ -425,7 +411,7 @@
   /* ── CTA ── */
   .cta-section {
     background: var(--bone); text-align: center;
-    padding: 120px clamp(48px, 8vw, 180px);
+    padding: 120px 48px;
     position: relative; overflow: hidden;
   }
   .cta-section::before {
@@ -443,7 +429,7 @@
   /* ── FOOTER ── */
   footer {
     background: var(--ink); color: rgba(255,255,255,0.5);
-    padding: 48px clamp(48px, 8vw, 180px);
+    padding: 48px;
     display: flex; align-items: center; justify-content: space-between;
     flex-wrap: wrap; gap: 20px;
   }
@@ -498,11 +484,11 @@
 <!-- NAV -->
 <nav id="nav">
   <a class="logo-svg" href="#">
-    <svg viewBox="0 0 42 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="4" y="15" width="8" height="17" rx="2" fill="#9B8AE0"/>
       <rect x="14" y="9" width="8" height="23" rx="2" fill="#6047C7"/>
       <rect x="24" y="2" width="8" height="30" rx="2" fill="#3F2A8E"/>
-      <circle cx="38" cy="3" r="4" fill="#B8A0E8"/>
+      <circle cx="33" cy="3" r="4" fill="#B8A0E8"/>
     </svg>
     <span class="logo-text">contador<strong>is</strong></span>
   </a>
@@ -520,17 +506,17 @@
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
 
-  <div class="hero-tag">Plataforma para o seu escritório de contabilidade</div>
-  <h1>Ganhe tempo e dinheiro<br>com <em>sua própria<br>plataforma.</em></h1>
-  <p class="hero-sub">Controle financeiro, processos contábeis e cobrança, tudo com a sua marca. Seu cliente paga os honorários direto pela sua plataforma.</p>
+  <div class="hero-tag">Plataforma contábil whitelabel</div>
+  <h1>A organização que<br><em>o seu escritório</em><br>precisa.</h1>
+  <p class="hero-sub">Gerencie honorários, clientes e processos contábeis em uma plataforma que leva a sua marca — não a nossa.</p>
   <div class="hero-actions">
-    <a href="#contato" class="btn-primary">Crie sua plataforma contábil</a>
+    <a href="#contato" class="btn-primary">Agendar demonstração</a>
     <a href="#como-funciona" class="btn-ghost">
       Ver como funciona
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#6047C7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
   </div>
-  <!-- <div class="hero-stats">
+  <div class="hero-stats">
     <div class="stat-item">
       <span class="stat-num">100%</span>
       <span class="stat-label">Whitelabel</span>
@@ -543,17 +529,17 @@
       <span class="stat-num">0</span>
       <span class="stat-label">Setup técnico</span>
     </div>
-  </div> -->
+  </div>
 
   <!-- Dashboard mockup -->
   <div class="hero-visual">
     <div class="dash-card">
       <div class="dash-header">
-        <svg width="20" height="20" viewBox="0 0 42 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="20" height="20" viewBox="0 0 36 36" fill="none">
           <rect x="2" y="14" width="7" height="18" rx="1.5" fill="#9B8AE0"/>
           <rect x="11" y="8" width="7" height="24" rx="1.5" fill="#6047C7"/>
           <rect x="20" y="2" width="7" height="30" rx="1.5" fill="#fff" opacity=".9"/>
-          <circle cx="38" cy="3" r="4" fill="#B8A0E8"/>
+          <circle cx="29" cy="3" r="3.5" fill="#B8A0E8"/>
         </svg>
         <span class="dash-logo-text">contador<strong>is</strong></span>
         <div class="dash-nav-items">
@@ -630,7 +616,7 @@
         </svg>
       </div>
       <div class="step-title">Cadastre seu escritório</div>
-      <div class="step-desc">Configure sua contabilidade na plataforma, defina sua identidade visual, logo, cores e nome e ative a assinatura que faz sentido para seu escritório.</div>
+      <div class="step-desc">Configure sua contabilidade na plataforma, defina sua identidade visual — logo, cores e nome — e ative sua assinatura.</div>
     </div>
     <div class="how-step">
       <div class="step-num">02 ·</div>
@@ -641,7 +627,7 @@
         </svg>
       </div>
       <div class="step-title">Adicione contadores e clientes</div>
-      <div class="step-desc">Crie perfis de contadores, vincule empresas e defina quem é responsável por cada cliente, com controle granular de acesso.</div>
+      <div class="step-desc">Crie perfis de contadores, vincule empresas e defina quem é responsável por cada cliente — com controle granular de acesso.</div>
     </div>
     <div class="how-step">
       <div class="step-num">03 ·</div>
