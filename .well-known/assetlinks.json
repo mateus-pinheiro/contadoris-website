@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "br.com.contadoris.app",
+      "sha256_cert_fingerprints": [
+        "D0:56:82:32:C6:B1:43:2F:63:17:42:99:7B:1E:E4:01:FE:9F:2C:30:7E:C6:27:6B:6D:F1:68:73:2A:DA:18:70"
+      ]
+    }
+  }
+]

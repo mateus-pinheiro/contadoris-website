@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: contadoris-web
+    runtime: static
+    staticPublishPath: .
+    buildCommand: ""
+    headers:
+      # AASA precisa ser servido como application/json e sem cache agressivo,
+      # caso contrário a Apple/Google rejeitam a verificação do universal/app link.
+      - path: /.well-known/apple-app-site-association
+        name: Content-Type
+        value: application/json
+      - path: /.well-known/apple-app-site-association
+        name: Cache-Control
+        value: public, max-age=300
+      - path: /.well-known/assetlinks.json
+        name: Content-Type
+        value: application/json
+      - path: /.well-known/assetlinks.json
+        name: Cache-Control
+        value: public, max-age=300
+    routes:
+      # Evita que um catch-all SPA reescreva /.well-known/* para index.html.
+      - type: rewrite
+        source: /.well-known/*
+        destination: /.well-known/:splat

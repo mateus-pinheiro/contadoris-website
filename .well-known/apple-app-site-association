@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["8Q37T6A4PT.br.com.contadoris.app"],
+        "components": [
+          {
+            "/": "/invitation*",
+            "comment": "Abre o app na tela de aceite de convite"
+          },
+          {
+            "/": "/invitation",
+            "comment": "Abre o app na tela de aceite de convite (raiz)"
+          }
+        ]
+      }
+    ]
+  }
+}
